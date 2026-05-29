@@ -3,291 +3,1880 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Module 5 & 6 — Generative AI & Full Stack AI Applications</title>
+<title>SCTP · DSAI Program — Generative AI & Full Stack AI Applications</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
 <style>
-  :root{
-    --bg:#000;
-    --fg:#fff;
-    --accent:#ff8c1a;
-    --accent-soft:#ffb066;
-    --muted:#9a9a9a;
-    --line:#222;
-    --card:#0c0c0c;
+  :root {
+    /* Color Palette */
+    --bg-main: #030712;
+    --bg-card: rgba(17, 24, 39, 0.45);
+    --bg-card-hover: rgba(17, 24, 39, 0.7);
+    --border-card: rgba(255, 255, 255, 0.06);
+    --border-card-hover: rgba(59, 130, 246, 0.3);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    /* Branding Colors */
+    --ntu-blue: #0b1528;
+    --ntu-blue-neon: #3b82f6;
+    --ntu-red: #D71440;
+    --ntu-red-glow: #ef4444;
+    
+    /* Glowing accents */
+    --glow-deployment: rgba(251, 191, 36, 0.15);
+    --border-deployment: rgba(251, 191, 36, 0.4);
+    --color-deployment: #fbbf24;
+    
+    --glow-sprint: rgba(239, 68, 68, 0.12);
+    --border-sprint: rgba(239, 68, 68, 0.4);
+    
+    --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    line-height:1.55;
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-  .wrap{max-width:1100px;margin:0 auto;padding:56px 28px 96px}
 
-  header.top{border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:40px}
-  .eyebrow{color:var(--accent);letter-spacing:.18em;text-transform:uppercase;font-size:12px;font-weight:600}
-  h1{font-size:38px;line-height:1.15;margin:10px 0 12px;font-weight:700}
-  h1 .amp{color:var(--accent)}
-  .lede{color:var(--muted);max-width:780px;font-size:16px}
-
-  .meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:18px;font-size:13px;color:var(--muted)}
-  .meta b{color:var(--fg);font-weight:600}
-
-  section{margin-top:48px}
-  h2{font-size:24px;margin:0 0 6px;font-weight:700}
-  h2 .num{color:var(--accent)}
-  .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-left:3px solid var(--accent);
-    padding:16px 16px 18px;
-    border-radius:6px;
-    position:relative;
-    transition:border-color .15s ease, transform .15s ease;
+  html, body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    line-height: 1.6;
   }
-  .card:hover{border-color:#333;border-left-color:var(--accent-soft)}
-  .step{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.1em}
-  .title{font-size:15px;font-weight:600;margin:4px 0 8px;color:var(--fg)}
-  .when{font-size:12px;color:var(--muted)}
-  .tag{
-    display:inline-block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
-    margin-top:10px;padding:3px 8px;border-radius:99px;
-    background:rgba(255,140,26,.12);color:var(--accent);border:1px solid rgba(255,140,26,.35);
-    font-weight:600;
-  }
-  .tag.sprint{background:rgba(255,255,255,.05);color:var(--fg);border-color:#2a2a2a}
 
-  .ships .ship-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-  .ships .ship-list li{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-top:3px solid var(--accent);
-    padding:18px 16px;
-    border-radius:6px;
-    display:flex;align-items:flex-start;gap:14px;
+  /* Decorative Ambient Blobs */
+  .ambient-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
   }
-  .ships .ship-n{
-    color:var(--accent);font-weight:700;font-size:22px;line-height:1;
-    font-feature-settings:"tnum";letter-spacing:.02em;
-    min-width:34px;
+  .ambient-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(130px);
+    opacity: 0.15;
+    mix-blend-mode: screen;
+    animation: float 25s infinite alternate ease-in-out;
   }
-  .ships .ship-t{color:var(--fg);font-size:15px;font-weight:500;line-height:1.35}
-  .ships .eyebrow{margin-bottom:8px}
-
-  .divider{display:flex;align-items:center;gap:18px;margin:64px 0 8px}
-  .divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,#2a2a2a,transparent)}
-  .divider-label{
-    color:var(--accent);
-    font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:700;
-    padding:6px 14px;border:1px solid rgba(255,140,26,.4);border-radius:99px;
-    background:rgba(255,140,26,.06);
-    white-space:nowrap;
+  .blob-blue {
+    top: -10%;
+    right: 15%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--ntu-blue-neon) 0%, transparent 70%);
   }
-  .overview-lede{color:var(--muted);font-size:14px;text-align:center;margin:0}
-  .overview-lede + section{margin-top:28px}
-
-  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;font-size:12px;color:var(--muted)}
-  .legend .dot{display:inline-block;width:10px;height:10px;border-radius:99px;margin-right:6px;vertical-align:middle}
-  .legend .d-deploy{background:var(--accent)}
-  .legend .d-sprint{background:#666}
-
-  .eligibility .eligibility-card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-left:3px solid var(--accent);
-    border-radius:6px;
-    padding:18px 20px;
-    display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;
+  .blob-red {
+    bottom: -10%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--ntu-red) 0%, transparent 70%);
+    animation-delay: -5s;
+    opacity: 0.1;
   }
-  .eligibility-label{
-    color:var(--accent);font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;
-    white-space:nowrap;
+  .blob-gold {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--color-deployment) 0%, transparent 70%);
+    opacity: 0.06;
+    animation-duration: 35s;
   }
-  .eligibility-text{color:var(--fg);font-size:15px;line-height:1.5;flex:1;min-width:220px}
-  .eligibility-text b{color:var(--fg);font-weight:600}
 
-  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-  footer span b{color:var(--fg)}
-  .design-credit{flex-basis:100%;text-align:center;color:var(--fg);font-size:13px;letter-spacing:.02em;margin-top:10px}
-  .design-credit .label{color:var(--accent);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;margin-right:8px}
+  @keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(50px, 40px) scale(1.1); }
+  }
 
-  @media (max-width:560px){
-    h1{font-size:28px}
-    .wrap{padding:36px 18px 64px}
+  /* Layout Wrapper */
+  .wrap {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Scroll Progress Bar */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ntu-blue-neon), var(--ntu-red), var(--color-deployment));
+    width: 0%;
+    z-index: 1001;
+    transition: width 0.1s ease-out;
+  }
+
+  /* Header / Navigation Bar */
+  header.sticky-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(3, 7, 18, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: var(--transition-smooth);
+  }
+  header.sticky-nav.scrolled {
+    background: rgba(3, 7, 18, 0.85);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    padding: 12px 0;
+  }
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--ntu-blue-neon), var(--ntu-red));
+    color: var(--text-primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 20px;
+  }
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .brand-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+  .brand-subtitle {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ntu-red-glow);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    position: relative;
+  }
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--ntu-red);
+    transition: var(--transition-smooth);
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+  .nav-cta {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-cta:hover {
+    background: var(--text-primary);
+    color: var(--bg-main);
+    transform: translateY(-1px);
+  }
+
+  /* Hero Section */
+  .hero {
+    margin-top: 140px;
+    padding: 40px 0 60px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(215, 20, 64, 0.08);
+    border: 1px solid rgba(215, 20, 64, 0.25);
+    color: var(--ntu-red-glow);
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(215, 20, 64, 0.05);
+  }
+  .hero-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--ntu-red-glow);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--ntu-red-glow);
+  }
+  .hero h1 {
+    font-family: var(--font-heading);
+    font-size: 54px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    max-width: 900px;
+    margin: 0 auto 20px;
+  }
+  .hero h1 span.gradient-text {
+    background: linear-gradient(135deg, var(--text-primary) 30%, #a5b4fc 65%, var(--ntu-red-glow) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero h1 span.amp {
+    font-weight: 300;
+    color: var(--ntu-red-glow);
+  }
+  .hero-lede {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 780px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    text-align: left;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-card-hover);
+    box-shadow: 0 20px 40px -20px rgba(59, 130, 246, 0.2);
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .stat-val {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .stat-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .stat-card.accented {
+    border-color: rgba(215, 20, 64, 0.15);
+  }
+  .stat-card.accented:hover {
+    border-color: rgba(215, 20, 64, 0.4);
+    box-shadow: 0 20px 40px -20px rgba(215, 20, 64, 0.2);
+  }
+  .stat-card.accented .stat-val {
+    color: var(--ntu-red-glow);
+  }
+
+  /* Section Styles */
+  section {
+    padding: 60px 0;
+    position: relative;
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ntu-red-glow);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .section-title span.highlight {
+    background: linear-gradient(90deg, var(--text-primary), var(--ntu-red-glow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section-sub {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-top: 8px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Capstone Project Cards */
+  .ship-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  .ship-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 14px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 160px;
+    cursor: default;
+  }
+  .ship-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-card-hover);
+    box-shadow: 0 15px 30px -15px rgba(59, 130, 246, 0.3);
+  }
+  .ship-num {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-family: var(--font-heading);
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text-primary);
+    opacity: 0.04;
+    transition: var(--transition-smooth);
+  }
+  .ship-card:hover .ship-num {
+    opacity: 0.12;
+    transform: scale(1.1);
+    color: var(--ntu-blue-neon);
+  }
+  .ship-card-title {
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    position: relative;
+    z-index: 2;
+  }
+  .ship-icon {
+    font-size: 24px;
+    color: var(--ntu-blue-neon);
+    margin-bottom: auto;
+  }
+
+  /* Divider Element */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin: 40px 0;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08) 50%, transparent);
+  }
+  .divider-label {
+    font-family: var(--font-heading);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 16px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+
+  /* Curriculum Filters */
+  .filter-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-secondary);
+    padding: 8px 20px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+  .filter-btn.active {
+    background: var(--text-primary);
+    color: var(--bg-main);
+    border-color: var(--text-primary);
+  }
+  .filter-btn.active .btn-badge {
+    background: rgba(0, 0, 0, 0.15);
+    color: inherit;
+  }
+  .btn-badge {
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 99px;
+    color: var(--text-secondary);
+    margin-left: 2px;
+  }
+
+  /* Interactive Roadmap / Curriculum Timeline */
+  .roadmap-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+  
+  /* Vertical Line in center */
+  .roadmap-timeline-line {
+    position: absolute;
+    left: 45px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, 
+      rgba(59, 130, 246, 0.4) 0%, 
+      rgba(215, 20, 64, 0.4) 50%, 
+      rgba(251, 191, 36, 0.4) 100%);
+    z-index: 1;
+  }
+
+  .timeline-module-header {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 40px 0 24px 75px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+    position: relative;
+    transition: var(--transition-smooth);
+  }
+  .timeline-module-header .module-num {
+    color: var(--ntu-red-glow);
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .timeline-module-header::before {
+    content: '';
+    position: absolute;
+    left: -33px;
+    width: 8px;
+    height: 8px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--text-primary);
+  }
+
+  .topic-card-wrap {
+    display: flex;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition-smooth);
+  }
+
+  /* Node Indicator on timeline */
+  .timeline-node {
+    width: 20px;
+    height: 20px;
+    background: var(--bg-main);
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    position: absolute;
+    left: 36px;
+    top: 24px;
+    z-index: 3;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .topic-card-wrap:hover .timeline-node {
+    border-color: var(--ntu-blue-neon);
+    background: var(--ntu-blue-neon);
+    box-shadow: 0 0 12px var(--ntu-blue-neon);
+    transform: scale(1.1);
+  }
+
+  /* Special timeline node styling for Deployments */
+  .topic-card-wrap.deployment-item .timeline-node {
+    border-color: var(--color-deployment);
+    box-shadow: 0 0 8px var(--glow-deployment);
+  }
+  .topic-card-wrap.deployment-item:hover .timeline-node {
+    background: var(--color-deployment);
+    box-shadow: 0 0 16px var(--color-deployment);
+  }
+  .topic-card-wrap.deployment-item .timeline-node::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--color-deployment);
+    border-radius: 50%;
+  }
+
+  .topic-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 16px;
+    padding: 22px 26px;
+    margin-left: 75px;
+    width: calc(100% - 75px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+  }
+  .topic-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.01) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .topic-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px -15px rgba(59, 130, 246, 0.15);
+  }
+
+  /* Deployments Custom Styles */
+  .topic-card-wrap.deployment-item .topic-card {
+    border-left: 4px solid var(--color-deployment);
+    background: rgba(251, 191, 36, 0.03);
+    border-color: rgba(251, 191, 36, 0.15) rgba(251, 191, 36, 0.15) rgba(251, 191, 36, 0.15) var(--color-deployment);
+  }
+  .topic-card-wrap.deployment-item .topic-card:hover {
+    background: rgba(251, 191, 36, 0.05);
+    border-color: rgba(251, 191, 36, 0.4) rgba(251, 191, 36, 0.4) rgba(251, 191, 36, 0.4) var(--color-deployment);
+    box-shadow: 0 10px 30px -15px rgba(251, 191, 36, 0.2);
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .topic-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ntu-blue-neon);
+    text-transform: uppercase;
+  }
+  .topic-card-wrap.deployment-item .topic-num {
+    color: var(--color-deployment);
+  }
+  .topic-badge-container {
+    display: flex;
+    gap: 8px;
+  }
+  .topic-badge {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .topic-badge.deploy-tag {
+    background: rgba(251, 191, 36, 0.1);
+    color: var(--color-deployment);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+  }
+  .topic-badge.sprint-tag {
+    background: rgba(215, 20, 64, 0.1);
+    color: var(--ntu-red-glow);
+    border: 1px solid rgba(215, 20, 64, 0.25);
+  }
+
+  .topic-title-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .topic-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .topic-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    transition: var(--transition-smooth);
+  }
+  .expand-indicator {
+    font-size: 20px;
+    color: var(--text-muted);
+    transition: var(--transition-smooth);
+    user-select: none;
+  }
+  .topic-card:hover .expand-indicator {
+    color: var(--text-primary);
+  }
+
+  /* Accordion Content Panel */
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  }
+  .topic-card.expanded .accordion-content {
+    max-height: 300px;
+    opacity: 1;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .topic-card.expanded .expand-indicator {
+    transform: rotate(180deg);
+    color: var(--ntu-blue-neon);
+  }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .detail-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .detail-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+  }
+  .detail-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tool-tag {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    color: var(--text-primary);
+  }
+
+  /* Eligibility & Call to Action */
+  .eligibility {
+    padding: 80px 0;
+  }
+  .eligibility-container {
+    background: radial-gradient(100% 100% at 50% 0%, rgba(11, 21, 40, 0.4) 0%, rgba(3, 7, 18, 0.4) 100%);
+    border: 1px solid var(--border-card);
+    border-radius: 24px;
+    padding: 48px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+  }
+  .eligibility-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3) 50%, transparent);
+  }
+  .eligibility-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  .eligibility-content h2 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .eligibility-content h2 span {
+    color: var(--ntu-red-glow);
+  }
+  .eligibility-content p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .prereq-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--ntu-red-glow);
+    padding: 20px;
+    border-radius: 12px;
+    display: flex;
+    gap: 16px;
+  }
+  .prereq-icon {
+    font-size: 28px;
+    color: var(--ntu-red-glow);
+  }
+  .prereq-card-title {
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ntu-red-glow);
+    margin-bottom: 4px;
+  }
+  .prereq-card-text {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .prereq-card-text b {
+    color: var(--text-primary);
+  }
+  
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .cta-btn {
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .cta-btn.primary-btn {
+    background: var(--ntu-red);
+    color: var(--text-primary);
+    border: 1px solid var(--ntu-red);
+    box-shadow: 0 10px 25px -10px rgba(215, 20, 64, 0.5);
+  }
+  .cta-btn.primary-btn:hover {
+    background: #e6194a;
+    border-color: #e6194a;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -8px rgba(215, 20, 64, 0.6);
+  }
+  .cta-btn.secondary-btn {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .cta-btn.secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+
+  /* Footer */
+  footer {
+    padding: 60px 0 40px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    z-index: 10;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .footer-brand-title {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .footer-brand-title span {
+    color: var(--ntu-red-glow);
+  }
+  .footer-desc {
+    color: var(--text-secondary);
+    font-size: 13.5px;
+    max-width: 500px;
+  }
+  .footer-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    text-align: right;
+  }
+  .footer-meta-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .footer-meta-item b {
+    color: var(--text-primary);
+  }
+  .design-credit {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 24px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--text-muted);
+  }
+  .design-credit .label {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ntu-red-glow);
+    margin-right: 8px;
+    display: inline-block;
+  }
+  .design-credit b {
+    color: var(--text-secondary);
+  }
+
+  /* Responsive styling */
+  @media (max-width: 1024px) {
+    .ship-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 40px;
+    }
+    .hero-stats {
+      grid-template-columns: 1fr;
+    }
+    .ship-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .eligibility-inner {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .footer-meta {
+      align-items: flex-start;
+      text-align: left;
+    }
+    .nav-links {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero h1 {
+      font-size: 32px;
+    }
+    .ship-grid {
+      grid-template-columns: 1fr;
+    }
+    .roadmap-timeline-line {
+      left: 20px;
+    }
+    .timeline-module-header {
+      margin-left: 45px;
+    }
+    .timeline-module-header::before {
+      left: -28px;
+    }
+    .timeline-node {
+      left: 11px;
+    }
+    .topic-card {
+      margin-left: 45px;
+      width: calc(100% - 45px);
+      padding: 16px 20px;
+    }
+    .details-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* JS-controlled Filter classes */
+  .topic-card-wrap.filtered-out,
+  .timeline-module-header.filtered-out {
+    display: none;
+    opacity: 0;
   }
 </style>
 </head>
 <body>
+
+<!-- Ambient background design -->
+<div class="ambient-container" aria-hidden="true">
+  <div class="ambient-blob blob-blue"></div>
+  <div class="ambient-blob blob-red"></div>
+  <div class="ambient-blob blob-gold"></div>
+</div>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- Glassmorphic Navigation -->
+<header class="sticky-nav" id="stickyNav">
+  <div class="nav-container">
+    <a href="#" class="brand">
+      <div class="brand-logo"><span class="material-symbols-outlined">school</span></div>
+      <div class="brand-text">
+        <span class="brand-title">DSAI Roadmap</span>
+        <span class="brand-subtitle">NTU Singapore</span>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a href="#" class="nav-link">Overview</a>
+      <a href="#curriculum" class="nav-link">Curriculum</a>
+      <a href="#ships" class="nav-link">Shipments</a>
+      <a href="#apply" class="nav-link">Apply</a>
+    </nav>
+    <a href="#apply" class="nav-cta">
+      Enroll Now
+      <span class="material-symbols-outlined" style="font-size: 14px;">arrow_forward</span>
+    </a>
+  </div>
+</header>
+
 <div class="wrap">
 
-  <header class="top">
-    <div class="eyebrow">SCTP · DSAI Program · Roadmap v1.0</div>
-    <h1>Module 5 <span class="amp">&</span> 6 — Generative AI &amp; Full Stack AI Applications</h1>
-    <p class="lede">A 15-step path from responsible AI fundamentals to a multi-agent full-stack capstone. Each building block is taught, then shipped as a deployment.</p>
-    <div class="meta">
-      <span><b>Module 5</b> · Gen AI foundations · 15 hrs</span>
-      <span><b>Module 6</b> · Building blocks to full stack · 30 hrs</span>
-      <span><b>Deployments</b> · 5 shipped milestones</span>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      SCTP · DSAI Program · Roadmap v1.0
     </div>
-    <div class="legend">
-      <span><span class="dot d-deploy"></span>Deployment milestone</span>
-      <span><span class="dot d-sprint"></span>Capstone work sprint</span>
+    <h1>
+      <span class="gradient-text">Module 5 <span class="amp">&amp;</span> 6 — Generative AI</span><br>
+      <span style="color: var(--text-primary)">and Full Stack AI Applications</span>
+    </h1>
+    <p class="hero-lede">
+      A comprehensive 15-step roadmap traversing responsible AI fundamentals to a fully orchestrated multi-agent full-stack capstone. Each concept is introduced, masterfully built, and deployed as a live milestone.
+    </p>
+    
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div>
+          <div class="stat-label">Module 5</div>
+          <div class="stat-val">Gen AI Foundations</div>
+        </div>
+        <div class="stat-desc">Ethics, Prompting &amp; Prototyping (15 hrs)</div>
+      </div>
+      <div class="stat-card">
+        <div>
+          <div class="stat-label">Module 6</div>
+          <div class="stat-val">Full Stack AI</div>
+        </div>
+        <div class="stat-desc">Agents, RAG &amp; Orchestration (30 hrs)</div>
+      </div>
+      <div class="stat-card accented">
+        <div>
+          <div class="stat-label">Deployments</div>
+          <div class="stat-val">5 Shipped Milestones</div>
+        </div>
+        <div class="stat-desc">Live production-ready capstone systems</div>
+      </div>
     </div>
-  </header>
+  </section>
 
-  <section class="ships">
-    <div class="eyebrow">Your Capstone Projects</div>
-    <h2>What You'll <span class="num">Ship</span></h2>
-    <p class="sub">Five working artifacts — one per deployment milestone.</p>
-    <ol class="ship-list">
-      <li><span class="ship-n">01</span><span class="ship-t">A single-turn AI app</span></li>
-      <li><span class="ship-n">02</span><span class="ship-t">A website with enhanced UX design</span></li>
-      <li><span class="ship-n">03</span><span class="ship-t">An agentic RAG system</span></li>
-      <li><span class="ship-n">04</span><span class="ship-t">A fully functional workflow automation</span></li>
-      <li><span class="ship-n">05</span><span class="ship-t">A multi-agent orchestration</span></li>
-    </ol>
+  <!-- Capstone Projects Section -->
+  <section id="ships">
+    <div class="section-header">
+      <span class="section-eyebrow">Milestone Deliverables</span>
+      <h2 class="section-title">What You'll <span class="highlight">Ship</span></h2>
+      <p class="section-sub">Five functional, production-ready capstones deployed sequentially as you master key architectural pillars.</p>
+    </div>
+
+    <div class="ship-grid">
+      <div class="ship-card">
+        <span class="material-symbols-outlined ship-icon">smart_toy</span>
+        <span class="ship-num">01</span>
+        <div class="ship-card-title">A single-turn AI app</div>
+      </div>
+      <div class="ship-card">
+        <span class="material-symbols-outlined ship-icon">devices</span>
+        <span class="ship-num">02</span>
+        <div class="ship-card-title">A website with enhanced UX design</div>
+      </div>
+      <div class="ship-card">
+        <span class="material-symbols-outlined ship-icon">storage</span>
+        <span class="ship-num">03</span>
+        <div class="ship-card-title">An agentic RAG system</div>
+      </div>
+      <div class="ship-card">
+        <span class="material-symbols-outlined ship-icon">bolt</span>
+        <span class="ship-num">04</span>
+        <div class="ship-card-title">A fully functional workflow automation</div>
+      </div>
+      <div class="ship-card">
+        <span class="material-symbols-outlined ship-icon">hub</span>
+        <span class="ship-num">05</span>
+        <div class="ship-card-title">A multi-agent orchestration</div>
+      </div>
+    </div>
   </section>
 
   <div class="divider" role="separator" aria-hidden="true">
     <span class="divider-line"></span>
-    <span class="divider-label">Course Overview</span>
+    <span class="divider-label">Curriculum Roadmap</span>
     <span class="divider-line"></span>
   </div>
 
-  <p class="overview-lede">How you'll get there — 15 topics across two modules.</p>
+  <!-- Interactive Curriculum Timeline Section -->
+  <section id="curriculum">
+    <div class="section-header">
+      <span class="section-eyebrow">15 Topics End-to-End</span>
+      <h2 class="section-title">Explore the Path</h2>
+      <p class="section-sub">A structured, cumulative progression. Click on any topic card to view duration, toolstacks, and core skills you will master.</p>
+    </div>
 
-  <section>
-    <h2><span class="num">Module 5</span> · Generative AI</h2>
-    <p class="sub">Responsible AI → LLMs → prompting → context → prototyping → single-turn full stack.</p>
-    <div class="grid">
+    <!-- Filter Buttons -->
+    <div class="filter-controls">
+      <button class="filter-btn active" data-filter="all">
+        <span class="material-symbols-outlined" style="font-size: 16px;">all_inclusive</span>
+        All Topics <span class="btn-badge">15</span>
+      </button>
+      <button class="filter-btn" data-filter="m5">
+        <span class="material-symbols-outlined" style="font-size: 16px;">psychology</span>
+        Module 5 <span class="btn-badge">7</span>
+      </button>
+      <button class="filter-btn" data-filter="m6">
+        <span class="material-symbols-outlined" style="font-size: 16px;">code_blocks</span>
+        Module 6 <span class="btn-badge">8</span>
+      </button>
+      <button class="filter-btn" data-filter="deployments">
+        <span class="material-symbols-outlined" style="font-size: 16px;">rocket_launch</span>
+        Deployments Only <span class="btn-badge">5</span>
+      </button>
+    </div>
 
-      <div class="card">
-        <div class="step">TOPIC 01</div>
-        <div class="title">Responsible AI</div>
-        <div class="when">Ethics, safety, and security risks.</div>
+    <div class="roadmap-container">
+      <div class="roadmap-timeline-line" id="timelineLine"></div>
+
+      <!-- MODULE 5 -->
+      <div class="timeline-module-header" data-module="m5">
+        <span class="module-num">Module 5</span> — Generative AI Foundations
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 02</div>
-        <div class="title">Understanding LLMs</div>
-        <div class="when">How large language models actually work.</div>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 01</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Responsible AI</h3>
+          </div>
+          <p class="topic-desc">Ethics, safety standards, alignment mechanisms, and security risks in the age of generative models.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Interactive Lecture &amp; Case Study</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Key Frameworks</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">AI Ethics Guidelines</span>
+                  <span class="tool-tag">Model Alignment</span>
+                  <span class="tool-tag">Red Teaming</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 03</div>
-        <div class="title">Prompt Engineering</div>
-        <div class="when">Designing prompts that hold up.</div>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 02</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Understanding LLMs</h3>
+          </div>
+          <p class="topic-desc">How large language models are trained and function under the hood (transformers, tokens, embeddings).</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Under-the-hood Deep Dive</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Core Concepts</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Transformers</span>
+                  <span class="tool-tag">Neural Nets</span>
+                  <span class="tool-tag">Tokenization</span>
+                  <span class="tool-tag">Vector Embeddings</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 04</div>
-        <div class="title">Context Engineering</div>
-        <div class="when">Shaping the input window for reliable answers.</div>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 03</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Prompt Engineering</h3>
+          </div>
+          <p class="topic-desc">Designing robust, reproducible prompts (few-shot, chain-of-thought, system guidelines) that scale.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Guided Prompt Lab</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Tech &amp; Tools</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Few-Shot Prompting</span>
+                  <span class="tool-tag">Chain of Thought</span>
+                  <span class="tool-tag">System Instructions</span>
+                  <span class="tool-tag">Gemini / GPT Playground</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 05</div>
-        <div class="title">Building Apps — Quick Prototyping</div>
-        <div class="when">No-code &amp; agentic IDE rapid builds.</div>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 04</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Context Engineering</h3>
+          </div>
+          <p class="topic-desc">Shaping the model's context window, understanding limits, and grounding outputs to mitigate hallucination.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Context Optimizations</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Architectures</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Context Windowing</span>
+                  <span class="tool-tag">Output Grounding</span>
+                  <span class="tool-tag">Hallucination Mitigation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 06</div>
-        <div class="title">Building Block #1 — Single-Turn LLM Apps</div>
-        <div class="when">The foundational app pattern.</div>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 05</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Building Apps — Quick Prototyping</h3>
+          </div>
+          <p class="topic-desc">Leveraging no-code dashboards and modern agentic IDE tools for rapid, non-complex conceptual builds.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Prototype Hackathon</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Prototyping Stacks</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">No-Code platforms</span>
+                  <span class="tool-tag">Cursor IDE</span>
+                  <span class="tool-tag">HuggingFace Spaces</span>
+                  <span class="tool-tag">Streamlit</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <div class="step">TOPIC 07</div>
-        <div class="title">Full Stack — Single-Turn LLM Apps</div>
-        <div class="when">First production-style build.</div>
-        <span class="tag">Deployment 1</span>
-        <span class="tag sprint">Capstone Sprint</span>
+      <div class="topic-card-wrap" data-module="m5">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 06</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Building Block #1 — Single-Turn LLM Apps</h3>
+          </div>
+          <p class="topic-desc">The structural foundation of stateless AI integrations. Interfacing APIs directly to fetch immediate answers.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">2 Hours · Technical Blueprinting</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">APIs &amp; Connectors</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">OpenAI API</span>
+                  <span class="tool-tag">Google Gemini API</span>
+                  <span class="tool-tag">Anthropic SDK</span>
+                  <span class="tool-tag">Python Requests</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap deployment-item" data-module="m5" data-deployment="true">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 07</span>
+            <div class="topic-badge-container">
+              <span class="topic-badge deploy-tag">Deployment 1</span>
+              <span class="topic-badge sprint-tag">Capstone Sprint</span>
+            </div>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Full Stack — Single-Turn LLM Apps</h3>
+          </div>
+          <p class="topic-desc">Deploying your first live full-stack utility: packaging Topic 06 into a clean containerized web service.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">3 Hours · Production Launch Code</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Deployment Stack</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">HTML5 / Vanilla CSS</span>
+                  <span class="tool-tag">FastAPI Backend</span>
+                  <span class="tool-tag">Docker Container</span>
+                  <span class="tool-tag">Render Cloud Hosting</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE 6 -->
+      <div class="timeline-module-header" data-module="m6">
+        <span class="module-num">Module 6</span> — Building Full Stack AI Applications
+      </div>
+
+      <div class="topic-card-wrap" data-module="m6">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 08</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Skills and Agents</h3>
+          </div>
+          <p class="topic-desc">Transitioning from standard static prompts to autonomous units that can trigger custom programmatic tools.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">3 Hours · Agent Design Patterns</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Tools &amp; Libraries</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Tool Calling APIs</span>
+                  <span class="tool-tag">LangChain Agents</span>
+                  <span class="tool-tag">Function Definition</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap deployment-item" data-module="m6" data-deployment="true">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 09</span>
+            <div class="topic-badge-container">
+              <span class="topic-badge deploy-tag">Deployment 2</span>
+              <span class="topic-badge sprint-tag">Capstone Sprint</span>
+            </div>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Building Block #2 — UX Design</h3>
+          </div>
+          <p class="topic-desc">Designing and shipping a sleek frontend dashboard interface tailored for optimal agent-human conversations.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">3 Hours · Interface Engineering</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Frontend Stack</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">CSS Flex/Grid</span>
+                  <span class="tool-tag">Asynchronous JS</span>
+                  <span class="tool-tag">Lucide Web Icons</span>
+                  <span class="tool-tag">WebSocket Streaming</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap" data-module="m6">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 10</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Building Block #3 — Harness Engineering</h3>
+          </div>
+          <p class="topic-desc">RAG (Retrieval-Augmented Generation) infrastructure: processing PDFs, chunking algorithms, and embedding databases.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">4 Hours · Data Pipeline Engineering</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Vector Database Stacks</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Chroma DB</span>
+                  <span class="tool-tag">Pinecone API</span>
+                  <span class="tool-tag">Recursive Chunking</span>
+                  <span class="tool-tag">Semantic Search</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap deployment-item" data-module="m6" data-deployment="true">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 11</span>
+            <div class="topic-badge-container">
+              <span class="topic-badge deploy-tag">Deployment 3</span>
+              <span class="topic-badge sprint-tag">Capstone Sprint</span>
+            </div>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Full Stack — Agentic RAG</h3>
+          </div>
+          <p class="topic-desc">Connecting vector search engines directly to LLM prompts, serving grounded answers with references via a FastAPI service.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">4 Hours · End-to-End deployment</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Technical Integration</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">FastAPI Middleware</span>
+                  <span class="tool-tag">Vector Store Connect</span>
+                  <span class="tool-tag">Context Injectors</span>
+                  <span class="tool-tag">Docker Compose</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap" data-module="m6">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 12</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Building Block #4 — Workflow Automation</h3>
+          </div>
+          <p class="topic-desc">Integrating multi-stage logic loops, scheduling rules, state management, and messaging triggers.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">3 Hours · Automation Lab</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Automation Stacks</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">n8n / Langflow</span>
+                  <span class="tool-tag">Stateful memory loops</span>
+                  <span class="tool-tag">Slack Webhooks</span>
+                  <span class="tool-tag">CRON job engines</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap deployment-item" data-module="m6" data-deployment="true">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 13</span>
+            <div class="topic-badge-container">
+              <span class="topic-badge deploy-tag">Deployment 4</span>
+              <span class="topic-badge sprint-tag">Capstone Sprint</span>
+            </div>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Workflow Automation — RAG</h3>
+          </div>
+          <p class="topic-desc">Deploying a smart, autonomous operations bot that monitors a dataset, retrieves content via RAG, and automates downstream actions.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">4 Hours · Stateful Deployments</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">DevOps Stack</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Webhook receivers</span>
+                  <span class="tool-tag">Redis Cache state</span>
+                  <span class="tool-tag">FastAPI scheduler</span>
+                  <span class="tool-tag">Vercel / Railway Hosting</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap" data-module="m6">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 14</span>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Project Delivery — Agile / Scrum</h3>
+          </div>
+          <p class="topic-desc">Managing rapid AI deployment lifecycles within software engineering teams: Git flows, user testing, and iteration.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">3 Hours · Sprint Management</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Operational Tools</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">Git Pull Requests</span>
+                  <span class="tool-tag">Agile Board flows</span>
+                  <span class="tool-tag">User validation tests</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="topic-card-wrap deployment-item" data-module="m6" data-deployment="true">
+        <div class="timeline-node"></div>
+        <div class="topic-card">
+          <div class="card-top">
+            <span class="topic-num">Topic 15</span>
+            <div class="topic-badge-container">
+              <span class="topic-badge deploy-tag">Deployment 5</span>
+              <span class="topic-badge sprint-tag">Final Capstone</span>
+            </div>
+            <span class="material-symbols-outlined expand-indicator">expand_more</span>
+          </div>
+          <div class="topic-title-area">
+            <h3 class="topic-title">Multi-Agent Orchestration — RAG</h3>
+          </div>
+          <p class="topic-desc">The ultimate program capstone: orchestrating specialized agents (analysts, writers, proofreaders) cooperating to solve complex inputs.</p>
+          
+          <div class="accordion-content">
+            <div class="details-grid">
+              <div class="detail-group">
+                <span class="detail-title">Duration</span>
+                <span class="detail-desc">6 Hours · Architectural Masterpiece</span>
+              </div>
+              <div class="detail-group">
+                <span class="detail-title">Orchestration Stacks</span>
+                <div class="detail-desc">
+                  <span class="tool-tag">CrewAI framework</span>
+                  <span class="tool-tag">LangGraph states</span>
+                  <span class="tool-tag">Distributed Tasks</span>
+                  <span class="tool-tag">Cloud Deploy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <section>
-    <h2><span class="num">Module 6</span> · Building Full Stack AI Applications</h2>
-    <p class="sub">Agents → UX &amp; web → agentic RAG → workflow automation → multi-agent orchestration.</p>
-    <div class="grid">
-
-      <div class="card">
-        <div class="step">TOPIC 08</div>
-        <div class="title">Skills and Agents</div>
-        <div class="when">From prompts to autonomous tools.</div>
+  <!-- Eligibility Section -->
+  <section id="apply" class="eligibility">
+    <div class="eligibility-container">
+      <div class="eligibility-inner">
+        <div class="eligibility-content">
+          <h2>Who Should <span>Apply</span></h2>
+          <p>This program is carefully curated for working professionals and dedicated students seeking to pivot or build solid capabilities in AI Engineering.</p>
+          
+          <div class="prereq-card">
+            <span class="material-symbols-outlined prereq-icon">verified</span>
+            <div>
+              <div class="prereq-card-title">Core Prerequisite</div>
+              <div class="prereq-card-text">
+                <b>Basic Python Proficiency</b> — comfort with variables, loops, conditional flows, functions, classes, and built-in methods. No CS degree required, but basic programmatic familiarity is vital.
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="cta-actions">
+          <a class="cta-btn primary-btn" href="#">
+            Apply Now
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a class="cta-btn secondary-btn" href="#">
+            Download Brochure
+            <span class="material-symbols-outlined">download</span>
+          </a>
+        </div>
       </div>
-
-      <div class="card">
-        <div class="step">TOPIC 09</div>
-        <div class="title">Building Block #2 — UX Design</div>
-        <div class="when">Deploying the web-site for your app.</div>
-        <span class="tag">Deployment 2</span>
-        <span class="tag sprint">Capstone Sprint</span>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 10</div>
-        <div class="title">Building Block #3 — Harness Engineering</div>
-        <div class="when">Agentic RAG retrieval patterns.</div>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 11</div>
-        <div class="title">Full Stack — Agentic RAG</div>
-        <div class="when">Harness engineering, end-to-end.</div>
-        <span class="tag">Deployment 3</span>
-        <span class="tag sprint">Capstone Sprint</span>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 12</div>
-        <div class="title">Building Block #4 — Workflow Automation</div>
-        <div class="when">Chat bots and automation loops.</div>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 13</div>
-        <div class="title">Workflow Automation — RAG</div>
-        <div class="when">Automated, retrieval-grounded flows.</div>
-        <span class="tag">Deployment 4</span>
-        <span class="tag sprint">Capstone Sprint</span>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 14</div>
-        <div class="title">Project Delivery — Agile / Scrum</div>
-        <div class="when">Shipping like a real team.</div>
-      </div>
-
-      <div class="card">
-        <div class="step">TOPIC 15</div>
-        <div class="title">Multi-Agent Orchestration — RAG</div>
-        <div class="when">The capstone: agents working together.</div>
-        <span class="tag">Deployment 5</span>
-        <span class="tag sprint">Capstone Sprint</span>
-      </div>
-
     </div>
   </section>
 
-  <section class="eligibility">
-    <h2>Who Should <span class="num">Apply</span></h2>
-    <p class="sub">Suitable for students and working adults.</p>
-    <div class="eligibility-card">
-      <span class="eligibility-label">Prerequisite</span>
-      <span class="eligibility-text"><b>Basic Python</b> — variables, loops, functions, classes, and standard built-in methods. No computer science degree required.</span>
-    </div>
-  </section>
-
+  <!-- Footer -->
   <footer>
-    <span><b>Nanyang Technological University · Singapore</b> · SCTP — DSAI Program</span>
-    <span>Program Director &amp; Trainer: <b>Swarup Biswas</b> · Roadmap v1.0</span>
-    <span class="design-credit"><span class="label">Course Designed by</span><b>Swarup Biswas</b></span>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-title">DSAI Program <span>Roadmap</span></div>
+        <p class="footer-desc">Nanyang Technological University, Singapore · SCTP. A rigorous, deployment-oriented roadmap for Generative AI &amp; Full Stack AI applications.</p>
+      </div>
+      <div class="footer-meta">
+        <div class="footer-meta-item">NTU Singapore · <b>SCTP Program</b></div>
+        <div class="footer-meta-item">Program Director: <b>Swarup Biswas</b></div>
+      </div>
+    </div>
+    <div class="design-credit">
+      <span class="label">Course Designed by</span><b>Swarup Biswas</b>
+    </div>
   </footer>
 
 </div>
+
+<!-- Script for Interactive Filters and Accordion -->
+<script>
+  // 1. Sticky Navigation Header Background Scroll Effect & Scroll Progress Bar
+  const stickyNav = document.getElementById('stickyNav');
+  const scrollProgress = document.getElementById('scrollProgress');
+
+  window.addEventListener('scroll', () => {
+    // Nav background blur/opacity trigger
+    if (window.scrollY > 40) {
+      stickyNav.classList.add('scrolled');
+    } else {
+      stickyNav.classList.remove('scrolled');
+    }
+
+    // Scroll progress bar logic
+    const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrollPercentage = (window.scrollY / windowHeight) * 100;
+    scrollProgress.style.width = scrollPercentage + '%';
+  });
+
+  // 2. Interactive Accordion Expand/Collapse logic
+  const topicCards = document.querySelectorAll('.topic-card');
+  
+  topicCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't toggle accordion if clicking on links or badges
+      if (e.target.closest('.topic-badge') || e.target.closest('a')) {
+        return;
+      }
+      
+      const isExpanded = card.classList.contains('expanded');
+      
+      // Close all other expanded cards first for a clean experience
+      topicCards.forEach(otherCard => {
+        if (otherCard !== card && otherCard.classList.contains('expanded')) {
+          otherCard.classList.remove('expanded');
+        }
+      });
+      
+      // Toggle current card
+      if (isExpanded) {
+        card.classList.remove('expanded');
+      } else {
+        card.classList.add('expanded');
+        // Scroll card smoothly into center view if needed
+        setTimeout(() => {
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 300);
+      }
+    });
+  });
+
+  // 3. Dynamic Timeline Filtering Logic
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cardWraps = document.querySelectorAll('.topic-card-wrap');
+  const moduleHeaders = document.querySelectorAll('.timeline-module-header');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove active class from other buttons, add to current
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filterVal = btn.getAttribute('data-filter');
+
+      // Loop and filter timeline items
+      cardWraps.forEach(wrap => {
+        const itemModule = wrap.getAttribute('data-module');
+        const isDeployment = wrap.getAttribute('data-deployment') === 'true';
+
+        let showItem = false;
+
+        if (filterVal === 'all') {
+          showItem = true;
+        } else if (filterVal === 'm5' && itemModule === 'm5') {
+          showItem = true;
+        } else if (filterVal === 'm6' && itemModule === 'm6') {
+          showItem = true;
+        } else if (filterVal === 'deployments' && isDeployment) {
+          showItem = true;
+        }
+
+        if (showItem) {
+          wrap.classList.remove('filtered-out');
+        } else {
+          wrap.classList.add('filtered-out');
+        }
+      });
+
+      // Filter Module Headers
+      moduleHeaders.forEach(header => {
+        const headerModule = header.getAttribute('data-module');
+        if (filterVal === 'all') {
+          header.classList.remove('filtered-out');
+        } else if (filterVal === 'm5' && headerModule === 'm5') {
+          header.classList.remove('filtered-out');
+        } else if (filterVal === 'm6' && headerModule === 'm6') {
+          header.classList.remove('filtered-out');
+        } else {
+          header.classList.add('filtered-out');
+        }
+      });
+      
+      // Auto-collapse accordion items on filter change
+      topicCards.forEach(c => c.classList.remove('expanded'));
+    });
+  });
+</script>
 </body>
 </html>
